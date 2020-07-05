@@ -1,9 +1,9 @@
 import React, {
-  useEffect,
-  useState,
   useCallback,
-  useMemo,
+  useEffect,
   useLayoutEffect,
+  useMemo,
+  useState,
 } from 'react';
 import { Image } from 'react-native';
 
@@ -15,28 +15,28 @@ import formatValue from '../../utils/formatValue';
 import api from '../../services/api';
 
 import {
-  Container,
-  Header,
-  ScrollContainer,
-  FoodsContainer,
-  Food,
-  FoodImageContainer,
-  FoodContent,
-  FoodTitle,
-  FoodDescription,
-  FoodPricing,
   AdditionalsContainer,
-  Title,
-  TotalContainer,
   AdittionalItem,
   AdittionalItemText,
   AdittionalQuantity,
-  PriceButtonContainer,
-  TotalPrice,
-  QuantityContainer,
-  FinishOrderButton,
   ButtonText,
+  Container,
+  FinishOrderButton,
+  Food,
+  FoodContent,
+  FoodDescription,
+  FoodImageContainer,
+  FoodPricing,
+  FoodsContainer,
+  FoodTitle,
+  Header,
   IconContainer,
+  PriceButtonContainer,
+  QuantityContainer,
+  ScrollContainer,
+  Title,
+  TotalContainer,
+  TotalPrice,
 } from './styles';
 
 interface Params {
@@ -73,8 +73,6 @@ const FoodDetails: React.FC = () => {
 
   useEffect(() => {
     async function loadFood(): Promise<void> {
-      // Load a specific food with extras based on routeParams id
-
       const { data } = await api.get<Food>(`foods/${routeParams.id}`);
 
       setFood({
@@ -96,24 +94,20 @@ const FoodDetails: React.FC = () => {
   }, [routeParams]);
 
   function handleIncrementExtra(id: number): void {
-    // Increment extra quantity
     setExtras(state => {
-      const extrasTranformed = state.map(extraState => {
+      return state.map(extraState => {
         if (extraState.id === id) {
           return { ...extraState, quantity: extraState.quantity + 1 };
         }
 
         return extraState;
       });
-
-      return extrasTranformed;
     });
   }
 
   function handleDecrementExtra(id: number): void {
-    // Decrement extra quantity
     setExtras(state => {
-      const extrasTranformed = state.map(extraState => {
+      return state.map(extraState => {
         if (extraState.id === id) {
           return {
             ...extraState,
@@ -123,27 +117,20 @@ const FoodDetails: React.FC = () => {
 
         return extraState;
       });
-
-      return extrasTranformed;
     });
   }
 
   function handleIncrementFood(): void {
-    // Increment food quantity
-
     setFoodQuantity(foodQuantity + 1);
   }
 
   function handleDecrementFood(): void {
-    // Decrement food quantity
-
     if (foodQuantity - 1 >= 1) {
       setFoodQuantity(foodQuantity - 1);
     }
   }
 
   const toggleFavorite = useCallback(async () => {
-    // Toggle if food is favorite or not
     if (isFavorite) {
       await api.delete(`favorites/${food.id}`);
     } else {
@@ -153,8 +140,6 @@ const FoodDetails: React.FC = () => {
   }, [isFavorite, food]);
 
   const cartTotal = useMemo(() => {
-    // Calculate cartTotal
-
     const { amount } = extras.reduce(
       (accumulator, extra) => {
         accumulator.amount += extra.quantity * extra.value;
@@ -169,8 +154,6 @@ const FoodDetails: React.FC = () => {
   }, [extras, food, foodQuantity]);
 
   async function handleFinishOrder(): Promise<void> {
-    // Finish the order and save on the API
-
     const orderProduct = {
       product_id: food.id,
       name: food.name,
@@ -185,14 +168,12 @@ const FoodDetails: React.FC = () => {
     navigation.navigate('DashboardStack');
   }
 
-  // Calculate the correct icon name
   const favoriteIconName = useMemo(
     () => (isFavorite ? 'favorite' : 'favorite-border'),
     [isFavorite],
   );
 
   useLayoutEffect(() => {
-    // Add the favorite icon on the right of the header bar
     navigation.setOptions({
       headerRight: () => (
         <MaterialIcon
